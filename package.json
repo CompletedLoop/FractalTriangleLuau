@@ -15,5 +15,9 @@
     "@rbxts/types": "^1.0.813",
     "roblox-ts": "^3.0.0",
     "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "@rbxts/altmake": "^0.1.5",
+    "@rbxts/services": "^1.5.5"
   }
 }

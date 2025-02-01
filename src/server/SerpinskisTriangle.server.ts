@@ -1,7 +1,7 @@
 import { Clone, Make } from "@rbxts/altmake"
 import { Workspace } from "@rbxts/services"
 
-const random = () => new Random().NextNumber()
+const random = (seed?: number) => new Random(seed as never).NextNumber()
 
 const FractalContainer = Workspace["Serpinskis Triangle"]
 const ReferencePoint = FractalContainer.point
@@ -21,7 +21,7 @@ class SerpinskisTriangle {
 	 */
 	public run(count: number) {
 		for (let i = 0; i <= count; i++) {
-			const random_point = SerpinskisTriangle.RandomPointInTriangle()
+			const random_point = SerpinskisTriangle.getRandomPointInUnitEquilateralTriangle()
             const transformed_point = this.TransformPointToWorld(random_point)
             Point(transformed_point)
 
@@ -46,9 +46,31 @@ class SerpinskisTriangle {
                     .add( new Vector2(-1, 0) .sub ( new Vector2(1, 0) ) // + (vertexB - vertexA)
                         .mul(uv.X)) // * u1
 
-                    .add( new Vector2(0, 2) .sub (new Vector2(1, 0) ) // + (vertexC - vertexA)
+                    .add( new Vector2(0, 1) .sub ( new Vector2(1, 0) ) // + (vertexC - vertexA)
                         .mul(uv.Y)) // * u2
 	}
+    
+    public static getRandomPointInUnitEquilateralTriangle(): Vector2 {
+        // Vertices of the unit equilateral triangle
+        const v1 = new Vector2(.5, 0);
+        const v2 = new Vector2(-.5, 0);
+        const v3 = new Vector2(0, 1) // math.sqrt(3) / 2
+
+        // Generate two random numbers
+        const r1 = random();
+        const r2 = random();
+
+        // Compute barycentric coordinates
+        const a = math.sqrt(r1);
+        const b = (1 - a) * r2;
+        const c = 1 - a - b;
+
+        // Compute the random point
+        const x = a * v1.X + b * v2.X + c * v3.X;
+        const y = a * v1.Y + b * v2.Y + c * v3.Y;
+
+        return new Vector2(x, y);
+    }
 
 	/**
 	 * Will Transform a point from fractal space to world space
